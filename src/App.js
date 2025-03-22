@@ -11,7 +11,7 @@ import Footer from './components/Footer';
 function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen transition-colors duration-300">
+      <div className="min-h-screen transition-colors duration-300 dark:bg-gray-900 dark:text-white">
         <Navbar />
         <main>
           <Hero />

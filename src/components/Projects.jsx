@@ -11,7 +11,7 @@ const Projects = () => {
     : projectsData.filter(project => project.categories.includes(activeCategory));
   
   return (
-    <section id="projects" className="py-16 px-4">
+    <section id="projects" className="py-16 px-4 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">My Projects</h2>
         
@@ -21,7 +21,7 @@ const Projects = () => {
             onClick={() => setActiveCategory('all')}
             className={`px-4 py-2 rounded-full ${activeCategory === 'all' 
               ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
-              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')}`}
+              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')} dark:text-white`}
           >
             All
           </button>
@@ -29,7 +29,7 @@ const Projects = () => {
             onClick={() => setActiveCategory('frontend')}
             className={`px-4 py-2 rounded-full ${activeCategory === 'frontend' 
               ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
-              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')}`}
+              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')} dark:text-white`}
           >
             Frontend
           </button>
@@ -37,7 +37,7 @@ const Projects = () => {
             onClick={() => setActiveCategory('backend')}
             className={`px-4 py-2 rounded-full ${activeCategory === 'backend' 
               ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
-              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')}`}
+              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')} dark:text-white`}
           >
             Backend
           </button>
@@ -45,7 +45,7 @@ const Projects = () => {
             onClick={() => setActiveCategory('react')}
             className={`px-4 py-2 rounded-full ${activeCategory === 'react' 
               ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
-              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')}`}
+              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')} dark:text-white`}
           >
             React
           </button>
@@ -53,7 +53,7 @@ const Projects = () => {
             onClick={() => setActiveCategory('api')}
             className={`px-4 py-2 rounded-full ${activeCategory === 'api' 
               ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
-              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')}`}
+              : (darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300')} dark:text-white`}
           >
             API
           </button>
@@ -64,7 +64,7 @@ const Projects = () => {
           {filteredProjects.map(project => (
             <div 
               key={project.id} 
-              className={`rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+              className={`rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-2 ${darkMode ? 'bg-gray-800' : 'bg-white'} dark:bg-gray-800`}
             >
               <div className="h-48 overflow-hidden">
                 <img 
@@ -85,7 +85,7 @@ const Projects = () => {
                   </a>
                   <a 
                     href={project.sourceLink} 
-                    className={`px-3 py-1 rounded text-sm ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+                    className={`px-3 py-1 rounded text-sm ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} dark:bg-gray-700 dark:text-white`}
                   >
                     Source Code
                   </a>

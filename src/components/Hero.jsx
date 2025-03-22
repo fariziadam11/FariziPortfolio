@@ -5,11 +5,11 @@ const Hero = () => {
   const { darkMode } = useTheme();
   
   return (
-    <section id="home" className="pt-24 md:pt-32 pb-16 px-4">
+    <section id="home" className="pt-24 md:pt-32 pb-16 px-4 dark:bg-gray-900 dark:text-white">
       <div className="container mx-auto flex flex-col md:flex-row items-center">
         <div className="md:w-1/2 mb-8 md:mb-0">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Your Name</h1>
-          <h2 className="text-xl md:text-2xl text-blue-500 mb-6">Software Engineer | Web Developer</h2>
+          <h2 className="text-xl md:text-2xl text-blue-500 dark:text-blue-400 mb-6">Software Engineer | Web Developer</h2>
           <p className="text-lg mb-8 max-w-md">
             Creating elegant solutions to complex problems through clean, efficient code.
           </p>
@@ -17,7 +17,7 @@ const Hero = () => {
             <a href="#contact" className={`px-6 py-3 rounded-lg font-medium ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-colors`}>
               Hire Me
             </a>
-            <a href="#projects" className={`px-6 py-3 rounded-lg font-medium ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors`}>
+            <a href="#projects" className={`px-6 py-3 rounded-lg font-medium ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} transition-colors dark:text-white`}>
               View Work
             </a>
           </div>

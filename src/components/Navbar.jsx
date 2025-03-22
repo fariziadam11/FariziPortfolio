@@ -10,7 +10,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed w-full z-10 ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-md`}>
+    <nav className={`fixed w-full z-10 ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'} dark:bg-gray-800 dark:text-white shadow-md`}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           <a href="#" className="text-xl font-bold">YourName.dev</a>
@@ -40,7 +40,7 @@ const Navbar = () => {
             <a href="#contact" className="hover:text-blue-500">Contact</a>
             <button 
               onClick={toggleDarkMode}
-              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+              className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'} dark:bg-gray-700 dark:text-yellow-300`}
             >
               {darkMode ? '☀️' : '🌙'}
             </button>
@@ -58,7 +58,7 @@ const Navbar = () => {
             <div className="px-3 py-2">
               <button 
                 onClick={toggleDarkMode}
-                className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
+                className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'} dark:bg-gray-700 dark:text-yellow-300`}
               >
                 {darkMode ? '☀️' : '🌙'}
               </button>

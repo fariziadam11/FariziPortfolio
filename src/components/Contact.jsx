@@ -70,32 +70,28 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <span className="text-xl mr-3">📧</span>
-                  <p>your.email@example.com</p>
+                  <p>fariziadam508@gmail.com</p>
                 </div>
                 <div className="flex items-center">
                   <span className="text-xl mr-3">📱</span>
-                  <p>+1 (555) 123-4567</p>
+                  <p>+62-851-5640-0833</p>
                 </div>
                 <div className="flex items-center">
                   <span className="text-xl mr-3">📍</span>
-                  <p>Your Location</p>
+                  <p>Jakarta Indonesia</p>
                 </div>
               </div>
               <h3 className="text-xl font-semibold mt-8 mb-4">Social Links</h3>
               <div className="flex space-x-4">
-                <a href="#" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
+                <a href="https://github.com/fariziadam11" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
                   dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md transition-colors`}>
                   <span className="text-xl">🐙</span>
                 </a>
-                <a href="#" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
+                <a href="https://www.linkedin.com/in/fariziadam/" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
                   dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md transition-colors`}>
                   <span className="text-xl">💼</span>
                 </a>
-                <a href="#" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
-                  dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md transition-colors`}>
-                  <span className="text-xl">🐦</span>
-                </a>
-                <a href="#" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
+                <a href="https://www.instagram.com/friziadm/" className={`p-3 rounded-full ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-white hover:bg-gray-200'} 
                   dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md transition-colors`}>
                   <span className="text-xl">📸</span>
                 </a>

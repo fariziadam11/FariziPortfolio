@@ -1,16 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useForm } from '../hooks/useForm';
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const { darkMode } = useTheme();
   const initialState = { name: '', email: '', message: '' };
-  const { values, errors, handleChange, handleSubmit } = useForm(initialState);
+  const { 
+    values, 
+    errors, 
+    handleChange, 
+    handleSubmit, 
+    isSubmitting, 
+    submitSuccess 
+  } = useForm(initialState);
+  
+  useEffect(() => {
+    // Initialize EmailJS with your user ID
+    emailjs.init('nGLL7K9xsZhBoUVls'); // Replace with your EmailJS user ID
+  }, []);
   
   return (
-    <section id="contact" className="py-16 px-4 dark:bg-gray-900 dark:text-white">
+    <section id="contact" className="py-16 px-4 dark:bg-gray-900 dark:text-white relative">
+      {/* Success Popup */}
+      {submitSuccess && (
+        <div 
+          className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg transition-all duration-300 
+            ${darkMode ? 'bg-green-700 text-white' : 'bg-green-500 text-white'}`}
+        >
+          Message sent successfully! I'll get back to you soon.
+        </div>
+      )}
+
       <div className="container mx-auto max-w-4xl">
         <h2 className="text-3xl font-bold mb-12 text-center">Get In Touch</h2>
+        
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/2">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,9 +82,11 @@ const Contact = () => {
               </div>
               <button
                 type="submit"
-                className={`px-6 py-3 rounded-lg font-medium ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-colors`}
+                disabled={isSubmitting}
+                className={`px-6 py-3 rounded-lg font-medium ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} 
+                  text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

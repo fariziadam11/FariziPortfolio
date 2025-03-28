@@ -34,12 +34,11 @@ const Navbar = () => {
     const targetElement = document.getElementById(targetId);
     
     if (targetElement) {
-      targetElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+      window.scrollTo({
+        top: targetElement.offsetTop,
+        behavior: 'smooth'
       });
       
-      // Close mobile menu after selecting
       setMobileMenuOpen(false);
     }
   };
@@ -72,7 +71,7 @@ const Navbar = () => {
             className="text-xl font-bold"
             onClick={(e) => smoothScroll(e, 'home')}
           >
-            FariziAdam.dev
+            My Portfolio
           </motion.a>
           
           {/* Mobile menu button */}

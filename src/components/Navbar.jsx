@@ -1,46 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-
-const NavLink = ({ href, children, darkMode, onClick }) => {
-  return (
-    <motion.a 
-      href={href}
-      onClick={onClick}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className={`relative group hover:text-blue-500 transition-colors duration-300 ${
-        darkMode ? 'text-white' : 'text-gray-800'
-      }`}
-    >
-      {children}
-      <motion.span 
-        className={`absolute -bottom-1 left-0 w-0 h-0.5 ${
-          darkMode ? 'bg-blue-400' : 'bg-blue-500'
-        } group-hover:w-full transition-all duration-300`}
-        initial={{ width: 0 }}
-        whileHover={{ width: '100%' }}
-      />
-    </motion.a>
-  );
-};
 
 const Navbar = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const smoothScroll = (e, targetId) => {
+  const handleNavigation = (e, targetId) => {
+    // Prevent default behavior
     e.preventDefault();
-    const targetElement = document.getElementById(targetId);
     
-    if (targetElement) {
-      window.scrollTo({
-        top: targetElement.offsetTop,
-        behavior: 'smooth'
-      });
+    // Close mobile menu
+    setMobileMenuOpen(false);
+
+    // Delay to ensure menu closes
+    setTimeout(() => {
+      // Try multiple methods to ensure scrolling works
+      const targetElement = document.getElementById(targetId);
       
-      setMobileMenuOpen(false);
-    }
+      if (targetElement) {
+        // Method 1: scrollIntoView
+        targetElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+
+        // Method 2: window.scrollTo (fallback)
+        window.scrollTo({
+          top: targetElement.offsetTop,
+          behavior: 'smooth'
+        });
+
+        // Debugging logs
+        console.log('Navigating to:', targetId);
+        console.log('Target element:', targetElement);
+        console.log('Offset top:', targetElement.offsetTop);
+      } else {
+        console.error('Target section not found:', targetId);
+        // Fallback navigation if element not found
+        window.location.hash = targetId;
+      }
+    }, 300); // Short delay to allow menu to close
   };
 
   const toggleMobileMenu = () => {
@@ -64,17 +64,18 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
+          {/* Logo/Title */}
           <motion.a 
             href="#home"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="text-xl font-bold"
-            onClick={(e) => smoothScroll(e, 'home')}
+            onClick={(e) => handleNavigation(e, 'home')}
           >
             My Portfolio
           </motion.a>
           
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -91,17 +92,19 @@ const Navbar = () => {
             </motion.button>
           </div>
           
-          {/* Desktop menu */}
+          {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">
             {navLinks.map((link) => (
-              <NavLink 
+              <a 
                 key={link.id}
                 href={link.href}
-                darkMode={darkMode}
-                onClick={(e) => smoothScroll(e, link.id)}
+                onClick={(e) => handleNavigation(e, link.id)}
+                className={`relative group hover:text-blue-500 transition-colors duration-300 ${
+                  darkMode ? 'text-white' : 'text-gray-800'
+                }`}
               >
                 {link.label}
-              </NavLink>
+              </a>
             ))}
             <motion.button 
               whileTap={{ scale: 0.9 }}
@@ -113,7 +116,7 @@ const Navbar = () => {
           </div>
         </div>
         
-        {/* Mobile menu */}
+        {/* Mobile Menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div 
@@ -123,15 +126,14 @@ const Navbar = () => {
               className="md:hidden mt-2 py-2 space-y-2"
             >
               {navLinks.map((link) => (
-                <motion.a 
+                <a 
                   key={link.id}
                   href={link.href}
-                  onClick={(e) => smoothScroll(e, link.id)}
-                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => handleNavigation(e, link.id)}
                   className="block px-3 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
                 >
                   {link.label}
-                </motion.a>
+                </a>
               ))}
               <div className="px-3 py-2">
                 <motion.button 

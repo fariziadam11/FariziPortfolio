@@ -1,88 +1,98 @@
-// src/hooks/useForm.js
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import emailjs from '@emailjs/browser';
+import * as Yup from 'yup';
 
 export const useForm = (initialState) => {
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
-  const handleChange = (e) => {
+  // Validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is required')
+      .min(2, 'Name must be at least 2 characters')
+      .max(50, 'Name must not exceed 50 characters'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    message: Yup.string()
+      .required('Message is required')
+      .min(10, 'Message must be at least 10 characters')
+      .max(500, 'Message must not exceed 500 characters')
+  });
+
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setValues({
-      ...values,
+    setValues(prev => ({
+      ...prev,
       [name]: value
-    });
+    }));
     
+    // Clear specific field error when user starts typing
     if (errors[name]) {
-      setErrors({
-        ...errors,
+      setErrors(prev => ({
+        ...prev,
         [name]: null
+      }));
+    }
+  }, [errors]);
+
+  const validateForm = useCallback(async () => {
+    try {
+      await validationSchema.validate(values, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err) {
+      const errorObj = {};
+      err.inner.forEach(error => {
+        errorObj[error.path] = error.message;
       });
+      setErrors(errorObj);
+      return false;
     }
-  };
+  }, [values]);
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    // Name validation
-    if (!values.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
-    // Email validation
-    if (!values.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    // Message validation
-    if (!values.message.trim()) {
-      newErrors.message = 'Message is required';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setIsSubmitting(true);
-      
-      try {
-        // Replace with your actual EmailJS service details
-        const result = await emailjs.send(
-          'service_knjl3vk', // Replace with your EmailJS service ID
-          'template_48jzft2', // Replace with your EmailJS template ID
-          {
-            from_name: values.name,
-            from_email: values.email,
-            message: values.message
-          },
-          'nGLL7K9xsZhBoUVls' // Replace with your EmailJS public key
-        );
+    setSubmitError(null);
+    
+    const isValid = await validateForm();
+    if (!isValid) return;
 
-        console.log('Email sent successfully', result.text);
-        
-        // Reset form and show success message
-        setValues(initialState);
-        setSubmitSuccess(true);
-        
-        // Hide success message after 3 seconds
-        setTimeout(() => {
-          setSubmitSuccess(false);
-        }, 3000);
-      } catch (error) {
-        console.error('Failed to send email', error);
-        // Optionally, set an error state to show error message
-      } finally {
-        setIsSubmitting(false);
-      }
+    setIsSubmitting(true);
+    
+    try {
+      const result = await emailjs.send(
+        'service_knjl3vk',
+        'template_48jzft2',
+        {
+          from_name: values.name,
+          from_email: values.email,
+          message: values.message
+        },
+        'nGLL7K9xsZhBoUVls'
+      );
+
+      console.log('Email sent successfully', result.text);
+      
+      // Reset form and show success message
+      setValues(initialState);
+      setSubmitSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to send email', error);
+      setSubmitError('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }, [values, initialState, validateForm]);
 
   return {
     values,
@@ -90,6 +100,7 @@ export const useForm = (initialState) => {
     handleChange,
     handleSubmit,
     isSubmitting,
-    submitSuccess
+    submitSuccess,
+    submitError
   };
 };

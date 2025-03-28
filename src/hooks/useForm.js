@@ -53,7 +53,8 @@ export const useForm = (initialState) => {
       setErrors(errorObj);
       return false;
     }
-  }, [values]);
+  }, [values, validationSchema]); // Tambahkan validationSchema di sini
+  
 
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault();

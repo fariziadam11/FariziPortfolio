@@ -5,42 +5,58 @@ import { useTheme } from '../context/ThemeContext';
 const Navbar = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile view
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // Tailwind's md breakpoint
+    };
+
+    // Check initial load
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handleNavigation = (e, targetId) => {
     // Prevent default behavior
     e.preventDefault();
     
-    // Close mobile menu
-    setMobileMenuOpen(false);
-
-    // Delay to ensure menu closes
-    setTimeout(() => {
-      // Try multiple methods to ensure scrolling works
-      const targetElement = document.getElementById(targetId);
+    // Mobile-specific handling
+    if (isMobile) {
+      setMobileMenuOpen(false);
       
-      if (targetElement) {
-        // Method 1: scrollIntoView
-        targetElement.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
+      setTimeout(() => {
+        navigateToSection(targetId);
+      }, 300);
+    } else {
+      // Desktop - immediate navigation
+      navigateToSection(targetId);
+    }
+  };
 
-        // Method 2: window.scrollTo (fallback)
-        window.scrollTo({
-          top: targetElement.offsetTop,
-          behavior: 'smooth'
-        });
+  const navigateToSection = (targetId) => {
+    const targetElement = document.getElementById(targetId);
+    
+    if (targetElement) {
+      targetElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
 
-        // Debugging logs
-        console.log('Navigating to:', targetId);
-        console.log('Target element:', targetElement);
-        console.log('Offset top:', targetElement.offsetTop);
-      } else {
-        console.error('Target section not found:', targetId);
-        // Fallback navigation if element not found
-        window.location.hash = targetId;
-      }
-    }, 300); // Short delay to allow menu to close
+      window.scrollTo({
+        top: targetElement.offsetTop,
+        behavior: 'smooth'
+      });
+    } else {
+      console.error('Target section not found:', targetId);
+      window.location.hash = targetId;
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -64,7 +80,6 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
-          {/* Logo/Title */}
           <motion.a 
             href="#home"
             whileHover={{ scale: 1.05 }}
@@ -75,7 +90,7 @@ const Navbar = () => {
             My Portfolio
           </motion.a>
           
-          {/* Mobile Menu Button */}
+          {/* Mobile menu button */}
           <div className="md:hidden">
             <motion.button
               whileTap={{ scale: 0.9 }}
@@ -92,7 +107,7 @@ const Navbar = () => {
             </motion.button>
           </div>
           
-          {/* Desktop Menu */}
+          {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-4">
             {navLinks.map((link) => (
               <a 
@@ -116,7 +131,7 @@ const Navbar = () => {
           </div>
         </div>
         
-        {/* Mobile Menu */}
+        {/* Mobile menu */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div 

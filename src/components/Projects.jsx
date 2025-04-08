@@ -6,6 +6,7 @@ import projectsData from '../data/projects';
 const Projects = () => {
   const { darkMode } = useTheme();
   const [activeCategory, setActiveCategory] = useState('all');
+  const [showPopup, setShowPopup] = useState(false);
   
   const filteredProjects = activeCategory === 'all' 
     ? projectsData 
@@ -19,6 +20,16 @@ const Projects = () => {
     { name: 'API', value: 'api' }
   ];
   
+  const handleDemoClick = (e) => {
+    e.preventDefault();
+    setShowPopup(true);
+    
+    // Auto-hide popup after 5 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
+  };
+  
   return (
     <motion.section 
       initial={{ opacity: 0 }}
@@ -29,6 +40,30 @@ const Projects = () => {
     >
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">My Projects</h2>
+        
+        {/* Popup Message */}
+        <AnimatePresence>
+          {showPopup && (
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg
+                ${darkMode ? 'bg-yellow-700 text-white' : 'bg-yellow-100 border border-yellow-400 text-yellow-800'}`}
+            >
+              <div className="flex items-center">
+                <span className="text-xl mr-2">ℹ️</span>
+                <p>This project is temporarily unavailable. Please check back later!</p>
+                <button 
+                  onClick={() => setShowPopup(false)}
+                  className="ml-4 p-1 rounded-full hover:bg-opacity-20 hover:bg-black"
+                >
+                  ✕
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         {/* Category Filters */}
         <motion.div 
@@ -88,7 +123,8 @@ const Projects = () => {
                     <motion.a 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      href={project.demoLink} 
+                      href="#"
+                      onClick={handleDemoClick}
                       className={`px-3 py-1 rounded text-sm ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
                     >
                       Live Demo

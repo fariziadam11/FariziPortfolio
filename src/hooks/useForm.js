@@ -68,7 +68,7 @@ export const useForm = (initialState) => {
     try {
       const result = await emailjs.send(
         'service_knjl3vk',
-        'template_48jzft2',
+        'template_izz2jem',
         {
           from_name: values.name,
           from_email: values.email,

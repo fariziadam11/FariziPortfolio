@@ -167,7 +167,7 @@ const Hero = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
       id="home" 
-      className="relative min-h-screen pt-24 md:pt-32 pb-16 px-4 dark:bg-gray-900 dark:text-white overflow-hidden"
+      className="relative min-h-screen pt-16 sm:pt-20 md:pt-24 lg:pt-32 pb-16 px-4 dark:bg-gray-900 dark:text-white overflow-hidden"
       style={{ 
         perspective: '1000px'
       }}
@@ -179,14 +179,14 @@ const Hero = () => {
       />
 
       <motion.div 
-        className="container mx-auto flex flex-col md:flex-row items-center relative z-10"
+        className="container mx-auto flex flex-col lg:flex-row items-center justify-center relative z-10"
         style={{ y, opacity }}
       >
         <motion.div 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="md:w-1/2 mb-8 md:mb-0"
+          className="w-full lg:w-1/2 mb-12 lg:mb-0 px-4 sm:px-6"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -194,24 +194,24 @@ const Hero = () => {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="mb-6 inline-block"
           >
-            <div className="text-sm font-medium text-blue-500 dark:text-blue-400 mb-2 tracking-wider">
+            <div className="text-xs sm:text-sm font-medium text-blue-500 dark:text-blue-400 mb-2 tracking-wider">
               WELCOME TO MY PORTFOLIO
             </div>
           </motion.div>
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 min-h-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-500">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 min-h-16 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600 dark:from-blue-400 dark:to-purple-500">
             {typedName}
             {showCursor && typedName.length < fullName.length && <span className="text-black dark:text-white animate-pulse">|</span>}
           </h1>
 
-          <h2 className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-6 min-h-10">
+          <h2 className="text-lg sm:text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 min-h-10">
             {typedSubtitle}
             {showCursor && typedName.length === fullName.length && 
              typedSubtitle.length < fullSubtitle.length && 
              <span className="animate-pulse">|</span>}
           </h2>
 
-          <p className="text-lg mb-8 max-w-md min-h-24 text-gray-600 dark:text-gray-400">
+          <p className="text-base sm:text-lg mb-6 sm:mb-8 max-w-md min-h-20 sm:min-h-24 text-gray-600 dark:text-gray-400">
             {typedDescription}
             {showCursor && typedName.length === fullName.length && 
              typedSubtitle.length === fullSubtitle.length && 
@@ -226,28 +226,28 @@ const Hero = () => {
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -20, opacity: 0 }}
                 transition={{ duration: 0.6, type: "spring" }}
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap gap-3 sm:gap-4"
               >
                 <motion.a 
                   whileHover={{ scale: 1.05, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.5)" }}
                   whileTap={{ scale: 0.95 }}
                   href="#contact" 
-                  className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-all`}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center gap-2 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-all`}
                 >
-                  <Mail size={18} />
-                  Hire Me
+                  <Mail size={16} className="sm:block" />
+                  <span>Hire Me</span>
                 </motion.a>
 
                 <motion.a 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   href="#projects" 
-                  className={`px-6 py-3 rounded-lg font-medium flex items-center gap-2 ${darkMode ? 'bg-gray-800 hover:bg-gray-700 border border-gray-700' : 'bg-white hover:bg-gray-100 border border-gray-200'} transition-all dark:text-white shadow-sm`}
+                  className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center gap-2 ${darkMode ? 'bg-gray-800 hover:bg-gray-700 border border-gray-700' : 'bg-white hover:bg-gray-100 border border-gray-200'} transition-all dark:text-white shadow-sm`}
                 >
                   View Work
                 </motion.a>
 
-                <motion.div className="flex gap-3 mt-4 md:mt-8">
+                <motion.div className="flex gap-2 sm:gap-3 mt-4 md:mt-6 w-full">
                   <motion.a 
                     whileHover={{ y: -5, scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -257,7 +257,8 @@ const Hero = () => {
                     className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-all"
                     aria-label="GitHub"
                   >
-                    <Github size={20} />
+                    <Github size={18} className="sm:hidden" />
+                    <Github size={20} className="hidden sm:block" />
                   </motion.a>
 
                   <motion.a 
@@ -269,7 +270,8 @@ const Hero = () => {
                     className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-all"
                     aria-label="LinkedIn"
                   >
-                    <Linkedin size={20} />
+                    <Linkedin size={18} className="sm:hidden" />
+                    <Linkedin size={20} className="hidden sm:block" />
                   </motion.a>
 
                   <motion.a 
@@ -280,7 +282,8 @@ const Hero = () => {
                     className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-all"
                     aria-label="Download Resume"
                   >
-                    <Download size={20} />
+                    <Download size={18} className="sm:hidden" />
+                    <Download size={20} className="hidden sm:block" />
                   </motion.a>
                 </motion.div>
               </motion.div>
@@ -292,14 +295,14 @@ const Hero = () => {
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          className="md:w-1/2 flex justify-center"
+          className="w-full lg:w-1/2 flex justify-center px-4"
         >
           {/* 3D Card Effect */}
           <motion.div 
             whileHover={{ rotateY: 5, rotateX: 5, scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="relative w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden group shadow-2xl"
+            className="relative w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden group shadow-2xl"
             style={{ 
               transformStyle: 'preserve-3d',
               boxShadow: darkMode 
@@ -351,10 +354,10 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+            className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
           >
             <motion.p 
-              className="text-sm text-gray-500 dark:text-gray-400 mb-2"
+              className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1 sm:mb-2"
               animate={{ y: [0, 5, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
             >
@@ -364,7 +367,7 @@ const Hero = () => {
               animate={{ y: [0, 5, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
             >
-              <ChevronDown className="text-blue-500 dark:text-blue-400" size={20} />
+              <ChevronDown className="text-blue-500 dark:text-blue-400" size={18} />
             </motion.div>
           </motion.div>
         )}

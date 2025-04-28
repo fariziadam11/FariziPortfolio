@@ -1,23 +1,48 @@
-import React, { useRef } from 'react';
-import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
+
+import { motion, useInView } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Code, Zap, ShieldCheck, Smartphone, ChevronRight, Github, Coffee, BookOpen } from 'lucide-react';
 
 const About = () => {
   const { darkMode } = useTheme();
   const containerRef = useRef(null);
+  const svgBgRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
-  
+  const [mouse, setMouse] = useState({ x: null, y: null });
+
   // Parallax effect for background elements
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-  
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  // const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  
+  // const { scrollYProgress } = useScroll({
+  //   target: containerRef,
+  //   offset: ["start end", "end start"]
+  // });
+
+  // const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  // const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+
+  // Animate SVG background on mouse move
+  useEffect(() => {
+    const svg = svgBgRef.current;
+    if (!svg) return;
+    const handleMove = (e) => {
+      let x, y;
+      if (e.touches && e.touches.length) {
+        x = e.touches[0].clientX;
+        y = e.touches[0].clientY;
+      } else {
+        x = e.clientX;
+        y = e.clientY;
+      }
+      setMouse({ x, y });
+    };
+    svg.addEventListener('mousemove', handleMove);
+    svg.addEventListener('touchmove', handleMove);
+    return () => {
+      svg.removeEventListener('mousemove', handleMove);
+      svg.removeEventListener('touchmove', handleMove);
+    };
+  }, []);
+
   // Staggered animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,7 +54,7 @@ const About = () => {
       }
     }
   };
-  
+
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
@@ -41,7 +66,7 @@ const About = () => {
       }
     }
   };
-  
+
   const cardVariants = {
     hidden: { y: 30, opacity: 0 },
     visible: i => ({
@@ -55,7 +80,7 @@ const About = () => {
       }
     })
   };
-  
+
   const competencies = [
     {
       icon: <Code size={24} className="text-blue-500" />,
@@ -82,47 +107,54 @@ const About = () => {
       details: "Designing interfaces that provide optimal viewing experience across a wide range of devices with fluid layouts and responsive components."
     }
   ];
-  
+
   const personalFacts = [
     { icon: <Github size={20} />, text: "Open source contributor" },
     { icon: <Coffee size={20} />, text: "Coffee enthusiast" },
     { icon: <BookOpen size={20} />, text: "Avid tech reader" }
   ];
-  
+
   return (
     <section 
       id="about" 
       ref={containerRef}
       className={`relative py-20 px-4 overflow-hidden ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}
+      aria-label="About Section"
+      tabIndex={-1}
     >
-      {/* Decorative background elements */}
-      <motion.div 
-        className="absolute top-0 right-0 w-96 h-96 opacity-10 -z-10"
-        style={{ y: y1 }}
+      {/* Interactive SVG background */}
+      <svg
+        ref={svgBgRef}
+        width="100%"
+        height="100%"
+        viewBox="0 0 1440 600"
+        className="absolute inset-0 w-full h-full -z-10"
+        aria-hidden="true"
+        style={{ pointerEvents: 'auto' }}
       >
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            fill={darkMode ? "#4F46E5" : "#3B82F6"} 
-            d="M45.7,-77.2C59.3,-71.2,70.7,-59.3,78.9,-45.2C87.2,-31.1,92.4,-15.5,90.8,-0.9C89.3,13.7,81.1,27.4,72.1,40.3C63.1,53.2,53.3,65.2,40.8,70.8C28.3,76.4,14.1,75.5,-0.4,76.1C-14.8,76.8,-29.6,78.9,-41.9,73.5C-54.2,68.1,-64,55.2,-70.9,41.5C-77.8,27.8,-81.7,13.9,-81.7,0C-81.7,-13.9,-77.7,-27.8,-70.6,-40.5C-63.5,-53.2,-53.2,-64.7,-40.4,-71.2C-27.6,-77.7,-13.8,-79.1,1.2,-81.2C16.2,-83.3,32.1,-86,45.7,-77.2Z" 
-            transform="translate(100 100)" 
-          />
-        </svg>
-      </motion.div>
-      
-      <motion.div 
-        className="absolute bottom-0 left-0 w-80 h-80 opacity-10 -z-10"
-        style={{ y: y2 }}
-      >
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <path 
-            fill={darkMode ? "#8B5CF6" : "#6366F1"} 
-            d="M47.5,-73.8C62.4,-67.7,76.1,-56.8,83.2,-42.4C90.3,-28,90.8,-10,87.9,6.6C85.1,23.3,78.9,38.5,69.1,51.3C59.3,64.1,45.9,74.3,31.1,79.5C16.3,84.7,0.1,84.8,-16.9,82.1C-33.9,79.4,-51.7,73.9,-64.3,62.4C-76.9,50.9,-84.3,33.3,-87.9,14.7C-91.4,-3.9,-91.2,-23.5,-83.5,-39.2C-75.8,-54.9,-60.7,-66.8,-44.8,-72.4C-28.9,-78,-14.5,-77.3,0.6,-78.3C15.6,-79.3,32.6,-79.9,47.5,-73.8Z" 
-            transform="translate(100 100)" 
-          />
-        </svg>
-      </motion.div>
-      
-      <div className="container mx-auto max-w-6xl">
+        <defs>
+          <radialGradient id="about-bg-gradient" cx="50%" cy="50%" r="80%">
+            <stop offset="0%" stopColor={darkMode ? '#6366f1' : '#3b82f6'} stopOpacity="0.30" />
+            <stop offset="100%" stopColor={darkMode ? '#a78bfa' : '#818cf8'} stopOpacity="0.10" />
+          </radialGradient>
+        </defs>
+        <ellipse
+          cx={mouse.x ? mouse.x : 720}
+          cy={mouse.y ? mouse.y : 300}
+          rx={320}
+          ry={180}
+          fill="url(#about-bg-gradient)"
+        />
+        <ellipse
+          cx={mouse.x ? mouse.x + 220 : 940}
+          cy={mouse.y ? mouse.y + 80 : 380}
+          rx={180}
+          ry={80}
+          fill={darkMode ? '#a78bfa55' : '#6366f155'}
+        />
+      </svg>
+
+      <div className="container mx-auto max-w-6xl" aria-label="About Content">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}

@@ -13,6 +13,9 @@ const Hero = () => {
   const [showScrollHint, setShowScrollHint] = useState(false);
   const heroRef = useRef(null);
   const particlesRef = useRef(null);
+  const [mouse, setMouse] = useState({ x: null, y: null });
+  const [enableTypingSound] = useState(false); // Set to true to enable typing sound
+  const typingAudioRef = useRef(null);
 
   // Parallax effect for scroll
   const { scrollYProgress } = useScroll({
@@ -62,12 +65,30 @@ const Hero = () => {
 
     const drawParticles = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Animate gradient wave overlay
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, darkMode ? '#2563eb44' : '#2563eb22');
+      gradient.addColorStop(1, darkMode ? '#a78bfa44' : '#a78bfa22');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Draw and update particles
       particles.forEach(particle => {
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${darkMode ? '255, 255, 255' : '37, 99, 235'}, ${particle.alpha})`;
         ctx.fill();
+
+        // Interactive: move slightly toward mouse position if present
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - particle.x;
+          const dy = mouse.y - particle.y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if (dist < 120) {
+            particle.x += dx * 0.01 * (1 - dist/120);
+            particle.y += dy * 0.01 * (1 - dist/120);
+          }
+        }
 
         // Update position
         particle.x += particle.directionX * particle.speed;
@@ -103,11 +124,30 @@ const Hero = () => {
     resizeCanvas();
     drawParticles();
 
+    // Mouse interactivity
+    const handleMouseMove = (e) => {
+      setMouse({ x: e.clientX, y: e.clientY });
+    };
+    const handleTouchMove = (e) => {
+      if (e.touches && e.touches.length) {
+        setMouse({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+      }
+    };
+    const handleMouseLeave = () => setMouse({ x: null, y: null });
+    canvas.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener('touchmove', handleTouchMove);
+    canvas.addEventListener('touchend', handleMouseLeave);
+
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleMouseLeave);
     };
-  }, [darkMode]);
+  }, [darkMode, mouse]);
 
   // Typing animation effect
   useEffect(() => {
@@ -120,18 +160,27 @@ const Hero = () => {
       if (isMounted) setShowCursor(prev => !prev);
     }, 500);
 
+    const playTypingSound = () => {
+      if (enableTypingSound && typingAudioRef.current) {
+        typingAudioRef.current.currentTime = 0;
+        typingAudioRef.current.play();
+      }
+    };
+
     const typeTexts = () => {
       if (isMounted) {
         if (nameIndex <= fullName.length) {
           setTypedName(fullName.slice(0, nameIndex));
           nameIndex++;
-          setTimeout(typeTexts, Math.random() * 50 + 30); // Randomize typing speed for more natural effect
+          playTypingSound();
+          setTimeout(typeTexts, Math.random() * 50 + 30);
           return;
         }
 
         if (subtitleIndex <= fullSubtitle.length) {
           setTypedSubtitle(fullSubtitle.slice(0, subtitleIndex));
           subtitleIndex++;
+          playTypingSound();
           setTimeout(typeTexts, Math.random() * 40 + 20);
           return;
         }
@@ -139,6 +188,7 @@ const Hero = () => {
         if (descriptionIndex <= fullDescription.length) {
           setTypedDescription(fullDescription.slice(0, descriptionIndex));
           descriptionIndex++;
+          playTypingSound();
           setTimeout(typeTexts, Math.random() * 30 + 15);
           return;
         }
@@ -158,7 +208,7 @@ const Hero = () => {
       isMounted = false;
       clearInterval(cursorInterval);
     };
-  }, []);
+  }, [enableTypingSound]);
 
   return (
     <motion.section 
@@ -171,12 +221,19 @@ const Hero = () => {
       style={{ 
         perspective: '1000px'
       }}
+      aria-label="Hero Section"
+      tabIndex={-1}
     >
       {/* Particle background */}
       <canvas 
         ref={particlesRef} 
         className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        aria-hidden="true"
       />
+      {/* Typing sound effect (hidden audio) */}
+      {enableTypingSound && (
+        <audio ref={typingAudioRef} src="/sounds/typing.mp3" preload="auto" style={{ display: 'none' }} />
+      )}
 
       <motion.div 
         className="container mx-auto flex flex-col lg:flex-row items-center justify-center relative z-10"
@@ -187,6 +244,7 @@ const Hero = () => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
           className="w-full lg:w-1/2 mb-12 lg:mb-0 px-4 sm:px-6"
+          aria-label="Hero Info"
         >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -233,6 +291,8 @@ const Hero = () => {
                   whileTap={{ scale: 0.95 }}
                   href="#contact" 
                   className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium flex items-center gap-2 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white transition-all`}
+                  tabIndex={0}
+                  aria-label="Contact Me"
                 >
                   <Mail size={16} className="sm:block" />
                   <span>Hire Me</span>

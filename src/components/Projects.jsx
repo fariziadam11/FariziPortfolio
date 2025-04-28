@@ -123,6 +123,8 @@ const Projects = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
+          role="region"
+          aria-labelledby="projects-heading"
         >
           <motion.span 
             className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-4"
@@ -132,7 +134,7 @@ const Projects = () => {
           >
             My Work
           </motion.span>
-          <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 id="projects-heading" className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Featured Projects
           </h2>
           <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
@@ -170,6 +172,8 @@ const Projects = () => {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
           className="flex flex-wrap justify-center gap-3 mb-12"
+          role="tablist"
+          aria-label="Project Categories"
         >
           {categoryButtons.map((button, i) => (
             <motion.button 
@@ -179,11 +183,14 @@ const Projects = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveCategory(button.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                 activeCategory === button.value 
                   ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
                   : (darkMode ? 'bg-gray-800 hover:bg-gray-700 border border-gray-700' : 'bg-white hover:bg-gray-100 border border-gray-200')
               }`}
+              role="tab"
+              aria-selected={activeCategory === button.value}
+              tabIndex={activeCategory === button.value ? 0 : -1}
             >
               {button.name}
             </motion.button>
@@ -220,8 +227,9 @@ const Projects = () => {
                 <div className="relative h-48 overflow-hidden">
                   <motion.img 
                     src={project.image} 
-                    alt={project.title} 
+                    alt={project.title + ' project screenshot'} 
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <motion.button
@@ -264,13 +272,14 @@ const Projects = () => {
                     )}
                   </h3>
                   <p className="mb-4 text-gray-600 dark:text-gray-300 line-clamp-2">{project.description}</p>
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row gap-2 justify-between">
                     <motion.a 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       href="#"
                       onClick={(e) => handleDemoClick(e, project)}
-                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                      aria-label={`Open live demo for ${project.title}`}
                     >
                       <ExternalLink size={14} />
                       <span>Live Demo</span>
@@ -281,7 +290,8 @@ const Projects = () => {
                       href={project.sourceLink} 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} dark:text-white`}
+                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                      aria-label={`View source code for ${project.title}`}
                     >
                       <Code size={14} />
                       <span>Source</span>
@@ -301,7 +311,12 @@ const Projects = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="project-modal-title"
+              tabIndex={-1}
               onClick={closeProjectModal}
+              onKeyDown={e => { if (e.key === 'Escape') closeProjectModal(); }}
             >
               <motion.div
                 variants={modalVariants}
@@ -309,7 +324,8 @@ const Projects = () => {
                 animate="visible"
                 exit="exit"
                 className={`relative max-w-4xl w-full rounded-2xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-2xl`}
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
+                tabIndex={0}
               >
                 <button
                   className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 text-white hover:bg-black/40 transition-colors"
@@ -326,7 +342,7 @@ const Projects = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
                     <div className="p-6">
-                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedProject.title}</h2>
+                      <h2 id="project-modal-title" className="text-2xl md:text-3xl font-bold text-white mb-2">{selectedProject.title}</h2>
                       {selectedProject.year && (
                         <p className="text-white/80">{selectedProject.year}</p>
                       )}

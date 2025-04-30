@@ -210,6 +210,67 @@ const Hero = () => {
     };
   }, [enableTypingSound]);
 
+  // Function to draw signature on canvas
+  const drawSignature = (ctx, darkMode) => {
+    // Clear canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    
+    // Set signature style
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = darkMode ? '#3b82f6' : '#2563eb';
+    
+    // Get canvas dimensions
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+    
+    // Calculate signature positioning
+    const startX = width * 0.2;
+    const midX = width * 0.5;
+    const endX = width * 0.8;
+    const baseY = height * 0.5;
+    
+    // Draw signature (stylized "FA" for Farizi Adam)
+    ctx.beginPath();
+    
+    // Draw the "F" part
+    ctx.moveTo(startX, baseY - height * 0.3);
+    ctx.lineTo(startX, baseY + height * 0.3);
+    ctx.moveTo(startX, baseY - height * 0.2);
+    ctx.lineTo(midX - width * 0.1, baseY - height * 0.2);
+    ctx.moveTo(startX, baseY);
+    ctx.lineTo(midX - width * 0.15, baseY);
+    
+    // Draw the "A" part
+    ctx.moveTo(midX, baseY + height * 0.3);
+    ctx.lineTo(midX + width * 0.15, baseY - height * 0.3);
+    ctx.lineTo(midX + width * 0.3, baseY + height * 0.3);
+    ctx.moveTo(midX + width * 0.075, baseY);
+    ctx.lineTo(midX + width * 0.225, baseY);
+    
+    // Apply a decorative flourish
+    ctx.moveTo(startX, baseY + height * 0.3);
+    ctx.bezierCurveTo(
+      midX, baseY + height * 0.4,
+      midX + width * 0.2, baseY + height * 0.2,
+      endX, baseY + height * 0.1
+    );
+    
+    ctx.stroke();
+    
+    // Add subtle background glow
+    const glow = ctx.createRadialGradient(
+      midX, baseY, 0,
+      midX, baseY, width * 0.5
+    );
+    glow.addColorStop(0, darkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.1)');
+    glow.addColorStop(1, 'rgba(59, 130, 246, 0)');
+    
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, width, height);
+  };
+
   return (
     <motion.section 
       ref={heroRef}
@@ -357,7 +418,7 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
           className="w-full lg:w-1/2 flex justify-center px-4"
         >
-          {/* 3D Card Effect */}
+          {/* Signature Canvas with 3D Card Effect */}
           <motion.div 
             whileHover={{ rotateY: 5, rotateX: 5, scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -370,17 +431,38 @@ const Hero = () => {
                 : '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 40px 0 rgba(59, 130, 246, 0.1)'
             }}
           >
+            {/* Gradient background for signature */}
+            <div 
+              className="absolute inset-0" 
+              style={{
+                background: darkMode 
+                  ? 'radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)' 
+                  : 'radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 100%)'
+              }}
+            />
+            
+            {/* Signature canvas */}
+            <motion.canvas
+              className="absolute inset-0 w-full h-full"
+              ref={canvasRef => {
+                if (canvasRef) {
+                  // Set canvas dimensions
+                  canvasRef.width = canvasRef.offsetWidth;
+                  canvasRef.height = canvasRef.offsetHeight;
+                  
+                  // Get 2D context and draw signature
+                  const ctx = canvasRef.getContext('2d');
+                  drawSignature(ctx, darkMode);
+                }
+              }}
+            />
+
+            {/* Digital animated effect overlay */}
             <motion.div
-              className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 z-10"
+              className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-600/10 z-10"
               initial={{ opacity: 0 }}
               whileHover={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
-            />
-
-            <img 
-              src="/images/farizi.jpg" 
-              alt="Profile" 
-              className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
             />
 
             {/* Glowing border effect */}
@@ -402,6 +484,45 @@ const Hero = () => {
                 ease: 'easeInOut',
               }}
             />
+            
+            {/* Animated particles around signature */}
+            <motion.div 
+              className="absolute inset-0 z-10 opacity-50"
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            >
+              {[...Array(10)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute rounded-full"
+                  style={{
+                    width: Math.random() * 6 + 2,
+                    height: Math.random() * 6 + 2,
+                    backgroundColor: darkMode ? '#3b82f6' : '#2563eb',
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    x: [
+                      Math.random() * 20 - 10, 
+                      Math.random() * 20 - 10, 
+                      Math.random() * 20 - 10
+                    ],
+                    y: [
+                      Math.random() * 20 - 10, 
+                      Math.random() * 20 - 10, 
+                      Math.random() * 20 - 10
+                    ],
+                    opacity: [0.5, 1, 0.5]
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3 + Math.random() * 3,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+            </motion.div>
           </motion.div>
         </motion.div>
       </motion.div>

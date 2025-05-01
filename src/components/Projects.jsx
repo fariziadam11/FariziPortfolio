@@ -59,17 +59,36 @@ const Projects = () => {
   };
   
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 30, opacity: 0 },
     visible: i => ({
       y: 0,
       opacity: 1,
       transition: {
         delay: i * 0.1,
-        duration: 0.5,
+        duration: 0.6,
         type: "spring",
-        stiffness: 50
+        stiffness: 60,
+        damping: 12
       }
-    })
+    }),
+    hover: {
+      y: -10,
+      scale: 1.03,
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 15
+      }
+    },
+    tap: {
+      scale: 0.98,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 17
+      }
+    }
   };
   
   const categoryVariants = {
@@ -90,26 +109,31 @@ const Projects = () => {
       opacity: 1, 
       scale: 1,
       transition: {
-        duration: 0.3,
-        ease: "easeOut"
+        duration: 0.4,
+        ease: "easeOut",
+        type: "spring",
+        stiffness: 300,
+        damping: 25
       }
     },
     exit: { 
       opacity: 0, 
       scale: 0.8,
       transition: {
-        duration: 0.2,
+        duration: 0.3,
         ease: "easeIn"
       }
     }
   };
   
+
+
   return (
     <motion.section 
       ref={containerRef}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, type: "spring", stiffness: 50 }}
       id="projects" 
       className="py-20 px-4 dark:bg-gray-900 dark:text-white relative overflow-hidden"
     >
@@ -119,9 +143,9 @@ const Projects = () => {
       
       <div className="container mx-auto max-w-6xl">
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: -30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
+          transition={{ duration: 0.8, type: "spring", stiffness: 50 }}
           className="text-center mb-16"
           role="region"
           aria-labelledby="projects-heading"
@@ -130,7 +154,8 @@ const Projects = () => {
             className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-4"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.5, type: "spring", stiffness: 200 }}
+            whileHover={{ scale: 1.05, backgroundColor: darkMode ? '#1e40af' : '#dbeafe' }}
           >
             My Work
           </motion.span>
@@ -149,18 +174,25 @@ const Projects = () => {
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -50 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className={`fixed top-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-lg shadow-lg
                 ${darkMode ? 'bg-yellow-700 text-white' : 'bg-yellow-100 border border-yellow-400 text-yellow-800'}`}
+              drag
+              dragConstraints={{ left: -100, right: 100, top: 0, bottom: 50 }}
+              dragElastic={0.2}
             >
               <div className="flex items-center">
                 <span className="text-xl mr-2">ℹ️</span>
                 <p>This project is temporarily unavailable. Please check back later!</p>
-                <button 
+                <motion.button 
                   onClick={() => setShowPopup(false)}
-                  className="ml-4 p-1 rounded-full hover:bg-opacity-20 hover:bg-black"
+                  className="ml-4 p-1 rounded-full"
+                  whileHover={{ scale: 1.2, rotate: 90 }}
+                  whileTap={{ scale: 0.8 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <X size={18} />
-                </button>
+                </motion.button>
               </div>
             </motion.div>
           )}
@@ -180,10 +212,11 @@ const Projects = () => {
               key={button.value}
               custom={i}
               variants={categoryVariants}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.08, y: -2 }}
+              whileTap={{ scale: 0.92 }}
               onClick={() => setActiveCategory(button.value)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className={`px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                 activeCategory === button.value 
                   ? (darkMode ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white') 
                   : (darkMode ? 'bg-gray-800 hover:bg-gray-700 border border-gray-700' : 'bg-white hover:bg-gray-100 border border-gray-200')
@@ -214,11 +247,13 @@ const Projects = () => {
                 layout
                 whileHover={{ 
                   y: -10,
+                  scale: 1.02,
+                  rotateY: 2,
                   boxShadow: darkMode 
                     ? "0 25px 50px -12px rgba(0, 0, 0, 0.5)" 
                     : "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
                 }}
-                className={`rounded-xl overflow-hidden shadow-lg transition-all duration-300 ${darkMode ? 'bg-gray-800' : 'bg-white'} group`}
+                className={`rounded-xl overflow-hidden shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'} group`}
                 style={{ 
                   transformStyle: "preserve-3d",
                   perspective: "1000px"
@@ -228,8 +263,10 @@ const Projects = () => {
                   <motion.img 
                     src={project.image} 
                     alt={project.title + ' project screenshot'} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover"
                     loading="lazy"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <motion.button
@@ -274,23 +311,25 @@ const Projects = () => {
                   <p className="mb-4 text-gray-600 dark:text-gray-300 line-clamp-2">{project.description}</p>
                   <div className="flex flex-col sm:flex-row gap-2 justify-between">
                     <motion.a 
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, x: 2 }}
                       whileTap={{ scale: 0.95 }}
                       href="#"
                       onClick={(e) => handleDemoClick(e, project)}
-                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-blue-600' : 'bg-blue-500'} text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
                       aria-label={`Open live demo for ${project.title}`}
                     >
                       <ExternalLink size={14} />
                       <span>Live Demo</span>
                     </motion.a>
                     <motion.a 
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, x: -2 }}
                       whileTap={{ scale: 0.95 }}
                       href={project.sourceLink} 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                      className={`px-3 py-1 rounded-lg text-sm flex items-center gap-1 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'} dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
                       aria-label={`View source code for ${project.title}`}
                     >
                       <Code size={14} />
@@ -326,19 +365,28 @@ const Projects = () => {
                 className={`relative max-w-4xl w-full rounded-2xl overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-2xl`}
                 onClick={e => e.stopPropagation()}
                 tabIndex={0}
+                drag
+                dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                dragElastic={0.1}
               >
-                <button
-                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 text-white hover:bg-black/40 transition-colors"
+                <motion.button
+                  className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/20 text-white"
                   onClick={closeProjectModal}
+                  whileHover={{ scale: 1.1, rotate: 5, backgroundColor: "rgba(0,0,0,0.4)" }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <X size={20} />
-                </button>
+                </motion.button>
                 
                 <div className="relative h-64 md:h-80 overflow-hidden">
-                  <img 
+                  <motion.img 
                     src={selectedProject.image} 
                     alt={selectedProject.title} 
                     className="w-full h-full object-cover"
+                    initial={{ scale: 1.1, opacity: 0.8 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
                     <div className="p-6">

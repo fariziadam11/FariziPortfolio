@@ -7,7 +7,7 @@ const Navbar = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState('hero');
   const [scrollProgress, setScrollProgress] = useState(0);
   const navRef = useRef(null);
 
@@ -59,7 +59,7 @@ const Navbar = () => {
 
   // Track active section based on scroll position
   useEffect(() => {
-    const sections = ['home', 'about', 'projects', 'skills', 'contact'];
+    const sections = ['hero', 'about', 'projects', 'skills', 'contact'];
     
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100;
@@ -124,7 +124,7 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    { href: '#home', label: 'Home', id: 'home' },
+    { href: '#hero', label: 'Home', id: 'hero' },
     { href: '#about', label: 'About', id: 'about' },
     { href: '#projects', label: 'Projects', id: 'projects' },
     { href: '#skills', label: 'Skills', id: 'skills' },
@@ -159,9 +159,9 @@ const Navbar = () => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a 
-            href="#home"
+            href="#hero"
             className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-            onClick={(e) => handleNavigation(e, 'home')}
+            onClick={(e) => handleNavigation(e, 'hero')}
           >
             <span className="flex items-center">
               <span className="relative">

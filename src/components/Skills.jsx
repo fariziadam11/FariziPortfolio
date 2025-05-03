@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import skillsData from '../data/skills';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
-
-// Helper for animated gradient text
-const GradientText = ({ children, className = "" }) => (
-  <span className={`bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move ${className}`}>
-    {children}
-  </span>
-);
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 // Helper for glassmorphism
-const glass = 'bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl shadow-2xl border border-white/30 dark:border-gray-700/40';
+const glass = 'bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm shadow-lg border border-white/30 dark:border-gray-700/40';
 
 
 const Skills = () => {
@@ -21,7 +14,6 @@ const Skills = () => {
   const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 });
-  const canvasRef = useRef(null);
   
   // Check if device is mobile
   useEffect(() => {
@@ -44,125 +36,26 @@ const Skills = () => {
     ? skillsData 
     : skillsData.filter(skill => skill.category === activeCategory);
 
-  // Particle animation effect - removed for mobile completely
-  useEffect(() => {
-    if (isMobile || !canvasRef.current) return;
+  // No particle animation
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animationFrameId;
-
-    const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
-      initParticles();
-    };
-
-    const initParticles = () => {
-      particles = [];
-      const particleCount = Math.min(Math.floor(canvas.width / 20), 50);
-
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.5 + 0.5,
-          color: darkMode ? '#ffffff' : '#3b82f6',
-          alpha: Math.random() * 0.3 + 0.1,
-          speed: Math.random() * 0.3 + 0.1,
-          directionX: Math.random() * 0.6 - 0.3,
-          directionY: Math.random() * 0.6 - 0.3
-        });
-      }
-    };
-
-    const drawParticles = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particles.forEach(particle => {
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${darkMode ? '255, 255, 255' : '59, 130, 246'}, ${particle.alpha})`;
-        ctx.fill();
-
-        // Update position
-        particle.x += particle.directionX * particle.speed;
-        particle.y += particle.directionY * particle.speed;
-
-        // Boundary check
-        if (particle.x < 0 || particle.x > canvas.width) particle.directionX *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.directionY *= -1;
-      });
-
-      // Connect particles with lines
-      const connectionDistance = 80;
-      
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < connectionDistance) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(${darkMode ? '255, 255, 255' : '59, 130, 246'}, ${0.05 * (1 - distance / connectionDistance)})`;
-            ctx.lineWidth = 0.3;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(drawParticles);
-    };
-
-    const handleResize = () => {
-      resizeCanvas();
-    };
-
-    window.addEventListener('resize', handleResize);
-    resizeCanvas();
-    drawParticles();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [darkMode, isMobile]);
-
-  // Simplified animation variants for mobile
+  // Simple animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: isMobile ? 0.03 : 0.1
+        staggerChildren: 0.05
       }
     }
   };
 
   const itemVariants = {
-    hidden: { y: isMobile ? 0 : 20, opacity: 0 },
-    visible: { 
-      y: 0, 
-      opacity: 1,
-      transition: { 
-        duration: isMobile ? 0.4 : 0.6,
-        ease: 'easeOut'
-      }
-    }
-  };
-
-  const headingVariants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
       transition: { 
-        duration: 0.6, 
-        ease: 'easeOut' 
-      } 
+        duration: 0.4
+      }
     }
   };
 
@@ -171,23 +64,14 @@ const Skills = () => {
     visible: { 
       opacity: 1,
       transition: { 
-        duration: 0.6,
-        staggerChildren: isMobile ? 0.05 : 0.1,
-        delayChildren: 0.1
+        duration: 0.4
       } 
     }
   };
 
   const buttonVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    hover: !isMobile ? { 
-      scale: 1.05, 
-      boxShadow: darkMode 
-        ? '0 4px 12px rgba(0, 0, 0, 0.3)' 
-        : '0 4px 12px rgba(59, 130, 246, 0.3)' 
-    } : {},
-    tap: { scale: 0.95 }
+    visible: { opacity: 1 }
   };
 
   const handleSkillClick = (skill) => {
@@ -208,39 +92,19 @@ const Skills = () => {
         backgroundSize: 'cover',
       }}
     >
-      {/* Particle background - only on desktop */}
-      {/* Parallax Particle Background (desktop only) */}
-      {!isMobile && (
-        <canvas 
-          ref={canvasRef} 
-          className="absolute inset-0 w-full h-full pointer-events-none z-0"
-          aria-hidden="true"
-        />
-      )}
+      {/* Simple gradient background instead of particles */}
+      <div className="absolute inset-0 bg-gradient-to-br opacity-30 from-blue-200 to-purple-200 dark:from-blue-900 dark:to-purple-900 z-0"></div>
 
       <div className="container mx-auto relative z-10">
-        {/* Section header with animated gradient and shine */}
-        <motion.div 
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={headingVariants}
-          className="text-center mb-14 relative"
-        >
-          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 inline-block relative">
-            <GradientText>
-              Technical Skills
-              <span className="absolute left-0 top-1/2 w-full h-[6px] bg-gradient-to-r from-white/80 to-transparent opacity-40 blur-lg animate-shine" style={{animationDelay: '0.2s'}}></span>
-            </GradientText>
+        {/* Section header - simplified */}
+        <div className="text-center mb-14 relative">
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 inline-block relative bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+            Technical Skills
           </h2>
-          <motion.p 
-            className={`max-w-2xl mx-auto text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'} mt-2`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.7 }}
-          >
-            <GradientText>A collection of technologies I've worked with throughout my journey as a developer</GradientText>
-          </motion.p>
-        </motion.div>
+          <p className={`max-w-2xl mx-auto text-lg font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'} mt-2`}>
+            A collection of technologies I've worked with throughout my journey as a developer
+          </p>
+        </div>
 
         {/* Category filters - no animations on mobile */}
         <div 
@@ -278,7 +142,7 @@ const Skills = () => {
               aria-selected={activeCategory === category}
               tabIndex={activeCategory === category ? 0 : -1}
             >
-              <GradientText>{category.charAt(0).toUpperCase() + category.slice(1)}</GradientText>
+              {category.charAt(0).toUpperCase() + category.slice(1)}
             </motion.button>
           ))}
         </div>
@@ -290,7 +154,6 @@ const Skills = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            exit={{ opacity: 0, transition: { duration: 0.2 } }}
           >
             {filteredSkills.map((skill, index) => (
               <motion.div 
@@ -325,29 +188,17 @@ const Skills = () => {
                     </div>
                   </div>
                   <div className={`w-full h-3 rounded-full ${darkMode ? 'bg-blue-900/30' : 'bg-blue-200/60'} overflow-hidden shadow-inner`}>
-                    <motion.div 
+                    <div 
                       className={`h-full rounded-full ${skill.barColor || 'bg-gradient-to-r from-blue-400 to-purple-500'} shadow-lg`}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${skill.level}%` }}
-                      transition={{ 
-                        duration: 1.1, 
-                        delay: index * 0.07, 
-                        ease: 'backOut' 
-                      }}
-                      style={{minWidth: 8}}
+                      style={{width: `${skill.level}%`, minWidth: 8}}
                     />
                   </div>
                 </div>
                 
                 {skill.description && (
-                  <motion.p 
-                    className={`mt-4 text-sm leading-relaxed ${darkMode ? 'text-blue-100' : 'text-blue-900'}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 + index * 0.07, duration: 0.6 }}
-                  >
+                  <p className={`mt-4 text-sm leading-relaxed ${darkMode ? 'text-blue-100' : 'text-blue-900'}`}>
                     {skill.description}
-                  </motion.p>
+                  </p>
                 )}
                 {!isMobile && (
                   <div className="mt-4 text-xs text-right text-blue-500 dark:text-blue-400 animate-pulse">

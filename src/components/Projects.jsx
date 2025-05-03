@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import projectsData from '../data/projects';
 import { ExternalLink, Code, X, Maximize2 } from 'lucide-react';
@@ -11,7 +11,6 @@ const Projects = () => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: false, amount: 0.2 });
   
   const filteredProjects = activeCategory === 'all' 
     ? projectsData 
@@ -46,82 +45,36 @@ const Projects = () => {
     document.body.style.overflow = 'auto'; // Re-enable scrolling
   };
   
-  // Animation variants
+  // Simplified animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
+      opacity: 1
     }
   };
   
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: i => ({
-      y: 0,
+    hidden: { opacity: 0 },
+    visible: { 
       opacity: 1,
       transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        type: "spring",
-        stiffness: 60,
-        damping: 12
-      }
-    }),
-    hover: {
-      y: -10,
-      scale: 1.03,
-      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 15
-      }
-    },
-    tap: {
-      scale: 0.98,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 17
+        duration: 0.3
       }
     }
   };
   
-  const categoryVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: i => ({
-      y: 0,
+  const modalVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
       opacity: 1,
       transition: {
-        delay: i * 0.1,
-        duration: 0.5
-      }
-    })
-  };
-  
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { 
-      opacity: 1, 
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut",
-        type: "spring",
-        stiffness: 300,
-        damping: 25
+        duration: 0.3
       }
     },
     exit: { 
-      opacity: 0, 
-      scale: 0.8,
+      opacity: 0,
       transition: {
-        duration: 0.3,
-        ease: "easeIn"
+        duration: 0.2
       }
     }
   };
@@ -129,11 +82,8 @@ const Projects = () => {
 
 
   return (
-    <motion.section 
+    <section 
       ref={containerRef}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, type: "spring", stiffness: 50 }}
       id="projects" 
       className="py-20 px-4 dark:bg-gray-900 dark:text-white relative overflow-hidden"
     >
@@ -142,30 +92,23 @@ const Projects = () => {
       <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-purple-500/5 rounded-full blur-3xl -z-10"></div>
       
       <div className="container mx-auto max-w-6xl">
-        <motion.div 
-          initial={{ opacity: 0, y: -30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
-          transition={{ duration: 0.8, type: "spring", stiffness: 50 }}
+        <div 
           className="text-center mb-16"
           role="region"
           aria-labelledby="projects-heading"
         >
-          <motion.span 
+          <span 
             className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full mb-4"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ delay: 0.2, duration: 0.5, type: "spring", stiffness: 200 }}
-            whileHover={{ scale: 1.05, backgroundColor: darkMode ? '#1e40af' : '#dbeafe' }}
           >
             My Work
-          </motion.span>
+          </span>
           <h2 id="projects-heading" className="text-4xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Featured Projects
           </h2>
           <p className="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
             Explore my latest work and the technologies I've been using
           </p>
-        </motion.div>
+        </div>
         
         {/* Popup Message */}
         <AnimatePresence>
@@ -202,7 +145,7 @@ const Projects = () => {
         <motion.div 
           variants={containerVariants}
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          animate="visible"
           className="flex flex-wrap justify-center gap-3 mb-12"
           role="tablist"
           aria-label="Project Categories"
@@ -211,7 +154,7 @@ const Projects = () => {
             <motion.button 
               key={button.value}
               custom={i}
-              variants={categoryVariants}
+              variants={itemVariants}
               whileHover={{ scale: 1.08, y: -2 }}
               whileTap={{ scale: 0.92 }}
               onClick={() => setActiveCategory(button.value)}
@@ -236,7 +179,7 @@ const Projects = () => {
             layout
             variants={containerVariants}
             initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
+            animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {filteredProjects.map((project, i) => (
@@ -459,7 +402,7 @@ const Projects = () => {
           )}
         </AnimatePresence>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

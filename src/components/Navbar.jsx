@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Sun, Moon, Menu, X, ChevronRight } from 'lucide-react';
 
@@ -10,24 +10,22 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
   const navRef = useRef(null);
-  
-  // Use simpler scroll handling
-  const { scrollY } = useScroll();
-  
-  // Update scroll progress manually
+
+  // Simpler scroll handling with standard JavaScript
   useEffect(() => {
-    const unsubscribe = scrollY.on("change", (latest) => {
-      setScrollProgress(Math.min(latest / 100, 1));
-    });
+    const handleScroll = () => {
+      setScrollProgress(Math.min(window.scrollY / 100, 1));
+    };
     
-    return () => unsubscribe();
-  }, [scrollY]);
-  
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Calculate background styles based on scroll progress
   const getNavStyles = () => {
     const bgOpacity = 0.5 + (scrollProgress * 0.45);
     const blurAmount = scrollProgress * 10;
-    
+
     return {
       backgroundColor: darkMode 
         ? `rgba(17, 24, 39, ${bgOpacity})` 
@@ -42,7 +40,7 @@ const Navbar = () => {
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
     };
   };
-  
+
   // Detect mobile view
   useEffect(() => {
     const checkMobile = () => {
@@ -58,7 +56,7 @@ const Navbar = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-  
+
   // Track active section based on scroll position
   useEffect(() => {
     const sections = ['home', 'about', 'projects', 'skills', 'contact'];
@@ -133,47 +131,29 @@ const Navbar = () => {
     { href: '#contact', label: 'Contact', id: 'contact' }
   ];
 
-  // Simplified animations for desktop only
+  // Minimal animation variants
   const navItemVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    })
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 }
   };
   
   // Simplified mobile menu animation
   const mobileMenuVariants = {
     closed: { 
       opacity: 0,
-      height: 0,
-      transition: {
-        duration: 0.2,
-        ease: "easeInOut"
-      }
+      height: 0
     },
     open: { 
       opacity: 1,
-      height: 'auto',
-      transition: {
-        duration: 0.3,
-        ease: "easeInOut"
-      }
+      height: 'auto'
     }
   };
 
   return (
-    <motion.nav 
+    <nav 
       ref={navRef}
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
       style={getNavStyles()}
+      className="transition-all duration-300"
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
@@ -295,7 +275,7 @@ const Navbar = () => {
           )}
         </AnimatePresence>
       </div>
-    </motion.nav>
+    </nav>
   );
 };
 

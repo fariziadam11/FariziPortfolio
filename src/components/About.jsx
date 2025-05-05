@@ -118,7 +118,7 @@ const About = () => {
     <section 
       id="about" 
       ref={containerRef}
-      className={`relative py-20 px-4 overflow-hidden ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}`}
+      className={`relative py-20 px-4 overflow-hidden ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900/80 text-white' : 'bg-gradient-to-br from-blue-100 via-white to-purple-100 text-gray-800'}`}
       aria-label="About Section"
       tabIndex={-1}
     >

@@ -33,7 +33,7 @@ const Contact = () => {
   }, [submitSuccess]);
   
   return (
-    <section id="contact" className={`py-16 px-4 ${darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800'} relative`}>
+    <section id="contact" className={`py-16 px-4 relative ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900/80 text-white' : 'bg-gradient-to-br from-blue-100 via-white to-purple-100 text-gray-800'}`}>
       {/* Success Popup */}
       {showSuccessMessage && (
         <div 

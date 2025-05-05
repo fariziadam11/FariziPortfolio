@@ -34,7 +34,7 @@ const Hero = () => {
       className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden"
     >
       {/* Simple gradient background instead of canvas particles */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${darkMode ? 'from-blue-900/20 to-purple-900/20' : 'from-blue-100 to-purple-100'} -z-10`}></div>
+      <div className={`absolute inset-0 bg-gradient-to-br ${darkMode ? 'from-gray-900 via-gray-800 to-blue-900/80' : 'from-blue-100 via-white to-purple-100'} -z-10`}></div>
 
       {/* Main content with parallax effect */}
       <motion.div 
@@ -86,8 +86,8 @@ const Hero = () => {
               <span>Email</span>
             </a>
             <a 
-              href="/resume.pdf" 
-              download
+              href="/CV_Farizi_Adam.pdf" 
+              download="CV_Farizi_Adam.pdf"
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
             >
               <Download size={18} />

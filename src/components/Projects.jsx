@@ -85,7 +85,7 @@ const Projects = () => {
     <section 
       ref={containerRef}
       id="projects" 
-      className="py-20 px-4 dark:bg-gray-900 dark:text-white relative overflow-hidden"
+      className={`py-20 px-4 relative overflow-hidden ${darkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900/80 text-white' : 'bg-gradient-to-br from-blue-100 via-white to-purple-100 text-gray-800'}`}
     >
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-500/5 rounded-full blur-3xl -z-10"></div>
@@ -226,7 +226,7 @@ const Projects = () => {
                   
                   {/* Tech tags */}
                   <div className="absolute top-2 right-2 flex flex-wrap justify-end gap-1">
-                    {project.technologies && project.technologies.slice(0, 3).map((tech, index) => (
+                    {project.stack && project.stack.slice(0, 3).map((tech, index) => (
                       <span 
                         key={index}
                         className="px-2 py-1 text-xs font-medium bg-black/30 backdrop-blur-sm text-white rounded-md"
@@ -234,9 +234,9 @@ const Projects = () => {
                         {tech}
                       </span>
                     ))}
-                    {project.technologies && project.technologies.length > 3 && (
+                    {project.stack && project.stack.length > 3 && (
                       <span className="px-2 py-1 text-xs font-medium bg-black/30 backdrop-blur-sm text-white rounded-md">
-                        +{project.technologies.length - 3}
+                        +{project.stack.length - 3}
                       </span>
                     )}
                   </div>
@@ -342,17 +342,20 @@ const Projects = () => {
                 </div>
                 
                 <div className="p-6">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {selectedProject.technologies && selectedProject.technologies.map((tech, index) => (
-                      <span 
-                        key={index}
-                        className={`px-2 py-1 text-xs font-medium rounded-md ${
-                          darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        {tech}
-                      </span>
-                    ))}
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold mb-2">Tech Stack</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.stack && selectedProject.stack.map((tech, index) => (
+                        <span 
+                          key={index}
+                          className={`px-3 py-1.5 text-sm font-medium rounded-md ${
+                            darkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'
+                          }`}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                   
                   <p className="text-gray-600 dark:text-gray-300 mb-6">

@@ -9,6 +9,7 @@ import ErrorFallback from './components/ErrorFallback';
 const Navbar = lazy(() => import('./components/Navbar'));
 const Hero = lazy(() => import('./components/Hero'));
 const About = lazy(() => import('./components/About'));
+const Experience = lazy(() => import('./components/Experience'));
 const Projects = lazy(() => import('./components/Projects'));
 const Skills = lazy(() => import('./components/Skills'));
 const Contact = lazy(() => import('./components/Contact'));
@@ -28,6 +29,7 @@ function App() {
             <main>
               <Hero />
               <About />
+              <Experience />
               <Projects />
               <Skills />
               <Contact />

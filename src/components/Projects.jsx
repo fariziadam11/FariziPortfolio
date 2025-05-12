@@ -45,36 +45,65 @@ const Projects = () => {
     document.body.style.overflow = 'auto'; // Re-enable scrolling
   };
   
-  // Simplified animation variants
+  // Enhanced animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
-      opacity: 1
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+        when: "beforeChildren"
+      }
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+        when: "afterChildren"
+      }
     }
   };
   
   const itemVariants = {
-    hidden: { opacity: 0 },
+    hidden: { y: 20, opacity: 0 },
     visible: { 
+      y: 0,
       opacity: 1,
       transition: {
-        duration: 0.3
+        type: "spring",
+        stiffness: 300,
+        damping: 24,
+        duration: 0.4
+      }
+    },
+    exit: {
+      y: 20,
+      opacity: 0,
+      transition: {
+        duration: 0.2
       }
     }
   };
   
   const modalVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, scale: 0.9 },
     visible: { 
       opacity: 1,
+      scale: 1,
       transition: {
-        duration: 0.3
+        type: "spring",
+        stiffness: 300,
+        damping: 25,
+        duration: 0.4
       }
     },
     exit: { 
       opacity: 0,
+      scale: 0.9,
       transition: {
-        duration: 0.2
+        duration: 0.3
       }
     }
   };
@@ -174,12 +203,14 @@ const Projects = () => {
         </motion.div>
         
         {/* Projects Grid */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div 
+            key={activeCategory} // Key changes trigger animation
             layout
             variants={containerVariants}
             initial="hidden"
             animate="visible"
+            exit="exit"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {filteredProjects.map((project, i) => (
@@ -188,6 +219,13 @@ const Projects = () => {
                 custom={i}
                 variants={itemVariants}
                 layout
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{
+                  layout: { type: "spring", stiffness: 300, damping: 30 },
+                  delay: i * 0.05 // Stagger based on index
+                }}
                 whileHover={{ 
                   y: -10,
                   scale: 1.02,
@@ -214,9 +252,9 @@ const Projects = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <motion.button
                       initial={{ opacity: 0, y: 20 }}
-                      whileHover={{ scale: 1.1 }}
+                      whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.3)" }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
                       onClick={() => openProjectModal(project)}
                       className="m-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white"
                     >

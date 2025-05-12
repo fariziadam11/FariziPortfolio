@@ -86,8 +86,8 @@ const Hero = () => {
               <span>Email</span>
             </a>
             <a 
-              href="/CV_Farizi_Adam.pdf" 
-              download="CV_Farizi_Adam.pdf"
+              href="/CV Farizi Adam.pdf" 
+              download="CV Farizi Adam.pdf"
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
             >
               <Download size={18} />

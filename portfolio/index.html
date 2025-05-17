@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Farizi Adam's professional portfolio showcasing skills, projects and experience" />
+    <meta name="keywords" content="portfolio, web developer, software engineer, Farizi Adam" />
+    <meta name="author" content="Farizi Adam" />
+    <meta name="theme-color" content="#4f46e5" />
+    <title>Farizi Adam | Portfolio</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        
+        * {
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

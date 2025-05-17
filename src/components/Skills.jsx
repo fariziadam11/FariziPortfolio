@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import skillsData from '../data/skills';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
@@ -29,12 +29,17 @@ const Skills = () => {
     };
   }, []);
   
-  // Group skills by category
-  const categories = ['all', ...new Set(skillsData.map(skill => skill.category || 'other'))];
+  // Memoize categories to prevent recalculation on every render
+  const categories = useMemo(() => {
+    return ['all', ...new Set(skillsData.map(skill => skill.category || 'other'))];
+  }, []);
   
-  const filteredSkills = activeCategory === 'all' 
-    ? skillsData 
-    : skillsData.filter(skill => skill.category === activeCategory);
+  // Memoize filtered skills to prevent recalculation on every render
+  const filteredSkills = useMemo(() => {
+    return activeCategory === 'all' 
+      ? skillsData 
+      : skillsData.filter(skill => skill.category === activeCategory);
+  }, [activeCategory]);
 
   // No particle animation
 
@@ -74,13 +79,13 @@ const Skills = () => {
     visible: { opacity: 1 }
   };
 
-  const handleSkillClick = (skill) => {
+  const handleSkillClick = useCallback((skill) => {
     setSelectedSkill(skill);
-  };
+  }, []);
 
-  const closeDetailView = () => {
+  const closeDetailView = useCallback(() => {
     setSelectedSkill(null);
-  };
+  }, []);
   
   return (
     <section 
@@ -306,4 +311,5 @@ const Skills = () => {
   );
 };
 
-export default Skills;
+// Memoize the entire component to prevent unnecessary re-renders
+export default React.memo(Skills);

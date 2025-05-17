@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import projectsData from '../data/projects';
@@ -12,9 +12,12 @@ const Projects = () => {
   const [showModal, setShowModal] = useState(false);
   const containerRef = useRef(null);
   
-  const filteredProjects = activeCategory === 'all' 
-    ? projectsData 
-    : projectsData.filter(project => project.categories.includes(activeCategory));
+  // Memoize filtered projects to prevent recalculation on every render
+  const filteredProjects = useMemo(() => {
+    return activeCategory === 'all' 
+      ? projectsData 
+      : projectsData.filter(project => project.categories.includes(activeCategory));
+  }, [activeCategory]);
   
   const categoryButtons = [
     { name: 'All', value: 'all' },
@@ -24,7 +27,8 @@ const Projects = () => {
     { name: 'API', value: 'api' }
   ];
   
-  const handleDemoClick = (e, project) => {
+  // Memoize event handlers with useCallback
+  const handleDemoClick = useCallback((e, project) => {
     e.preventDefault();
     setShowPopup(true);
     
@@ -32,18 +36,18 @@ const Projects = () => {
     setTimeout(() => {
       setShowPopup(false);
     }, 5000);
-  };
+  }, []);
   
-  const openProjectModal = (project) => {
+  const openProjectModal = useCallback((project) => {
     setSelectedProject(project);
     setShowModal(true);
     document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-  };
+  }, []);
   
-  const closeProjectModal = () => {
+  const closeProjectModal = useCallback(() => {
     setShowModal(false);
     document.body.style.overflow = 'auto'; // Re-enable scrolling
-  };
+  }, []);
   
   // Enhanced animation variants
   const containerVariants = {
@@ -246,6 +250,8 @@ const Projects = () => {
                     alt={project.title + ' project screenshot'} 
                     className="w-full h-full object-cover"
                     loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                   />
@@ -447,4 +453,5 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+// Memoize the entire component to prevent unnecessary re-renders
+export default React.memo(Projects);

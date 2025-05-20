@@ -201,19 +201,74 @@ const Navbar = () => {
                 </Link>
               </motion.div>
             ))}
-            <motion.button 
-              whileHover={{ rotate: 15, scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleDarkMode}
-              className={`p-2 rounded-full transition-all duration-300 ${
-                darkMode 
-                  ? 'bg-gray-700 text-yellow-300 hover:bg-gray-600' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-              aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-            >
-              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </motion.button>
+            <motion.div className="relative">
+              <motion.button 
+                onClick={(e) => {
+                  e.persist();
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const centerX = rect.left + rect.width / 2;
+                  const centerY = rect.top + rect.height / 2;
+                  
+                  toggleDarkMode({
+                    clientX: centerX,
+                    clientY: centerY
+                  });
+                }}
+                className={`relative p-2 rounded-full z-10 ${
+                  darkMode 
+                    ? 'bg-gray-800 text-amber-300 hover:bg-gray-700' 
+                    : 'bg-gray-100 text-indigo-700 hover:bg-gray-200'
+                }`}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                <motion.span
+                  key={darkMode ? 'sun' : 'moon'}
+                  initial={{ opacity: 0, rotate: darkMode ? 90 : -90 }}
+                  animate={{ 
+                    opacity: 1, 
+                    rotate: 0,
+                    transition: { 
+                      type: 'spring', 
+                      stiffness: 500, 
+                      damping: 20 
+                    } 
+                  }}
+                  className="block relative z-10"
+                >
+                  {darkMode ? (
+                    <Sun size={20} className="text-amber-300" />
+                  ) : (
+                    <Moon size={20} className="text-indigo-700" />
+                  )}
+                </motion.span>
+              </motion.button>
+              
+              {/* Water droplet effect container */}
+              <motion.span 
+                className="absolute inset-0 rounded-full pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(0,0,0,0) 70%)',
+                  filter: 'blur(4px)',
+                  opacity: 0,
+                  scale: 0.8,
+                  transformOrigin: 'center',
+                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                }}
+                animate={{
+                  opacity: [0, 0.4, 0],
+                  scale: [0.8, 1.5, 2],
+                }}
+                transition={{
+                  duration: 1.2,
+                  ease: 'easeOut',
+                  repeat: 0,
+                  delay: 0.1
+                }}
+              />
+            </motion.div>
           </div>
         </div>
         
@@ -249,16 +304,69 @@ const Navbar = () => {
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                 </span>
-                <button 
-                  onClick={toggleDarkMode}
-                  className={`p-2 rounded-full ${
-                    darkMode 
-                      ? 'bg-gray-700 text-yellow-300' 
-                      : 'bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-                </button>
+                <div className="relative">
+                  <motion.button 
+                    onClick={(e) => {
+                      e.persist();
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const centerX = rect.left + rect.width / 2;
+                      const centerY = rect.top + rect.height / 2;
+                      
+                      toggleDarkMode({
+                        clientX: centerX,
+                        clientY: centerY
+                      });
+                    }}
+                    className={`relative p-2 rounded-full z-10 ${
+                      darkMode 
+                        ? 'bg-gray-800 text-amber-300' 
+                        : 'bg-gray-100 text-indigo-700'
+                    }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+                  >
+                    <motion.span
+                      key={darkMode ? 'sun-mobile' : 'moon-mobile'}
+                      initial={{ opacity: 0, rotate: darkMode ? 90 : -90 }}
+                      animate={{ 
+                        opacity: 1, 
+                        rotate: 0,
+                        transition: { 
+                          type: 'spring', 
+                          stiffness: 500, 
+                          damping: 20 
+                        } 
+                      }}
+                      className="block relative z-10"
+                    >
+                      {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+                    </motion.span>
+                  </motion.button>
+                  
+                  {/* Water droplet effect container */}
+                  <motion.span 
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, rgba(0,0,0,0) 70%)',
+                      filter: 'blur(4px)',
+                      opacity: 0,
+                      scale: 0.8,
+                      transformOrigin: 'center',
+                      transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}
+                    animate={{
+                      opacity: [0, 0.4, 0],
+                      scale: [0.8, 1.5, 2],
+                    }}
+                    transition={{
+                      duration: 1.2,
+                      ease: 'easeOut',
+                      repeat: 0,
+                      delay: 0.1
+                    }}
+                  />
+                </div>
               </div>
             </motion.div>
           )}

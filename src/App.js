@@ -28,8 +28,6 @@ function App() {
                 <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/skills" element={<SkillsPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                {/* Fallback route */}
-                <Route path="*" element={<Navigate to="/hero" replace />} />
               </Routes>
             </Router>
           </Suspense>

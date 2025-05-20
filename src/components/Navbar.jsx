@@ -2,14 +2,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { Sun, Moon, Menu, X, ChevronRight } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
   const [scrollProgress, setScrollProgress] = useState(0);
   const navRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState(location.pathname.substring(1) || 'hero');
 
   // Simpler scroll handling with standard JavaScript
   useEffect(() => {
@@ -91,45 +94,29 @@ const Navbar = () => {
       // Close menu immediately
       setMobileMenuOpen(false);
       
-      // Small delay to let menu close visually before scrolling
+      // Small delay to let menu close visually before navigating
       setTimeout(() => {
-        navigateToSection(targetId);
+        navigate(`/${targetId}`);
       }, 100);
     } else {
       // Desktop - immediate navigation
-      navigateToSection(targetId);
+      navigate(`/${targetId}`);
     }
   };
 
-  const navigateToSection = (targetId) => {
-    const targetElement = document.getElementById(targetId);
-    
-    if (targetElement) {
-      // Update active section immediately
-      setActiveSection(targetId);
-      
-      // Scroll to section
-      window.scrollTo({
-        top: targetElement.offsetTop,
-        behavior: 'smooth'
-      });
-    } else {
-      console.error('Target section not found:', targetId);
-      window.location.hash = targetId;
-    }
-  };
+  // Fungsi navigateToSection tidak dibutuhkan lagi karena kita menggunakan react-router
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
   const navLinks = [
-    { href: '#hero', label: 'Home', id: 'hero' },
-    { href: '#about', label: 'About', id: 'about' },
-    { href: '#experience', label: 'Experience', id: 'experience' },
-    { href: '#projects', label: 'Projects', id: 'projects' },
-    { href: '#skills', label: 'Skills', id: 'skills' },
-    { href: '#contact', label: 'Contact', id: 'contact' }
+    { href: '/hero', label: 'Home', id: 'hero' },
+    { href: '/about', label: 'About', id: 'about' },
+    { href: '/experience', label: 'Experience', id: 'experience' },
+    { href: '/projects', label: 'Projects', id: 'projects' },
+    { href: '/skills', label: 'Skills', id: 'skills' },
+    { href: '/contact', label: 'Contact', id: 'contact' }
   ];
 
   // Minimal animation variants
@@ -159,10 +146,9 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <a 
-            href="#hero"
+          <Link 
+            to="/hero"
             className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
-            onClick={(e) => handleNavigation(e, 'hero')}
           >
             <span className="flex items-center">
               <span className="relative">
@@ -171,7 +157,7 @@ const Navbar = () => {
               </span>
               <span className="ml-1 text-gray-800 dark:text-white">Portfolio</span>
             </span>
-          </a>
+          </Link>
           
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -191,27 +177,29 @@ const Navbar = () => {
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link, i) => (
-              <motion.a 
+              <motion.div 
                 key={link.id}
                 custom={i}
                 variants={navItemVariants}
                 initial="hidden"
                 animate="visible"
-                href={link.href}
-                onClick={(e) => handleNavigation(e, link.id)}
-                className={`relative group transition-colors duration-300 ${
+              >
+                <Link 
+                  to={link.href}
+                  className={`block relative group transition-colors duration-300 ${
                   activeSection === link.id 
                     ? 'text-blue-500 dark:text-blue-400' 
                     : 'text-gray-800 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400'
                 }`}
-              >
-                {link.label}
-                <motion.span 
-                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-blue-500 dark:bg-blue-400 transform origin-left ${
-                    activeSection === link.id ? 'scale-x-100' : 'scale-x-0'
-                  } group-hover:scale-x-100 transition-transform duration-300`}
-                />
-              </motion.a>
+                >
+                  {link.label}
+                  <motion.span 
+                    className={`absolute -bottom-1 left-0 w-full h-0.5 bg-blue-500 dark:bg-blue-400 transform origin-left ${
+                      activeSection === link.id ? 'scale-x-100' : 'scale-x-0'
+                    } group-hover:scale-x-100 transition-transform duration-300`}
+                  />
+                </Link>
+              </motion.div>
             ))}
             <motion.button 
               whileHover={{ rotate: 15, scale: 1.1 }}

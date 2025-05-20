@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Github, Linkedin, Mail, Download, ChevronDown } from 'lucide-react';
+import { Github, Linkedin, Mail, Download } from 'lucide-react';
 
 const Hero = () => {
   const { darkMode } = useTheme();
-  const [showScrollHint, setShowScrollHint] = useState(false);
   const heroRef = useRef(null);
 
   // Parallax effect for scroll
@@ -20,12 +19,6 @@ const Hero = () => {
   const fullName = "Farizi Adam";
   const fullSubtitle = "Software Engineer | Web Developer";
   const fullDescription = "Creating elegant solutions to complex problems through clean, efficient code.";
-
-  // Show scroll hint after component mounts
-  useEffect(() => {
-    const timer = setTimeout(() => setShowScrollHint(true), 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <section 
@@ -95,15 +88,7 @@ const Hero = () => {
             </a>
           </motion.div>
         </div>
-      </motion.div>
-
-      {/* Scroll down indicator */}
-      {showScrollHint && (
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-          <span className="text-sm text-gray-500 dark:text-gray-400 mb-2">Scroll Down</span>
-          <ChevronDown className="animate-bounce" />
-        </div>
-      )}
+      </motion.div> 
     </section>
   );
 };

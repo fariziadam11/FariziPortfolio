@@ -26,7 +26,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a 
-                  href="#home" 
+                  href="/" 
                   className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
                 >
                   Home
@@ -34,7 +34,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="#about" 
+                  href="/about" 
                   className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
                 >
                   About
@@ -42,7 +42,15 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="#skills" 
+                  href="/experience" 
+                  className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
+                >
+                  Experience
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/skills" 
                   className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
                 >
                   Skills
@@ -50,7 +58,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="#projects" 
+                  href="/projects" 
                   className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
                 >
                   Projects
@@ -58,7 +66,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="#contact" 
+                  href="/contact" 
                   className={`${darkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
                 >
                   Contact

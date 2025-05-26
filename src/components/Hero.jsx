@@ -54,7 +54,7 @@ const Hero = () => {
             className="flex flex-wrap justify-center gap-4 mt-8"
           >
             <a 
-              href="https://github.com/fariziadam" 
+              href="https://github.com/fariziadam11" 
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
